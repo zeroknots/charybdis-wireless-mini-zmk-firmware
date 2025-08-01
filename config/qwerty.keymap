@@ -32,6 +32,16 @@
     // #define SLOW    6
     // #define SCROLL  7
 
+    behaviors {
+        td_mouse: td_mouse {
+            compatible = "zmk,behavior-tap-dance";
+            label = "TD_MOUSE";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&mkp MB3>;
+        };
+    };
+
     keymap {
         compatible = "zmk,keymap";
 
@@ -50,6 +60,15 @@
 &trans  &trans  &trans  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans      &trans         &trans          &kp PLUS       &kp MINUS         &kp PIPE   &trans
 &trans  &trans  &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &trans      &trans         &kp UNDERSCORE  &kp LESS_THAN  &kp GREATER_THAN  &kp EQUAL  &kp RGUI
                         &mkp MB2              &mkp MB1               &mkp MB3    &kp BACKSPACE  &kp ENTER
+            >;
+        };
+
+        numbers {
+            bindings = <
+&kp TILDE  &kp EXCLAMATION  &kp AT_SIGN   &kp HASH      &kp DOLLAR    &kp PERCENT     &kp CARET     &kp AMPERSAND  &kp ASTERISK  &trans  &trans  &trans
+&trans     &kp NUMBER_1     &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4  &kp NUMBER_5    &kp NUMBER_6  &kp N7         &kp N8        &kp N9  &kp N0  &trans
+&trans     &trans           &trans        &trans        &trans        &trans          &trans        &trans         &trans        &trans  &trans  &trans
+                                          &trans        &trans        &trans          &trans        &trans
             >;
         };
     };
