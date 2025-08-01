@@ -41,15 +41,37 @@
         };
     };
 
+    behaviors {
+        cmd_plus: cmd_plus {
+            compatible = "zmk,behavior-hold-tap";
+            label = "CMD_PLUS";
+            bindings = <&kp>, <&kp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <290>;
+            flavor = "tap-preferred";
+        };
+
+        mouse_scroll: mouse_scroll {
+            compatible = "zmk,behavior-hold-tap";
+            label = "MOUSE_SCROLL";
+            bindings = <&mkp>, <&mkp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <300>;
+            flavor = "tap-preferred";
+        };
+    };
+
     keymap {
         compatible = "zmk,keymap";
 
         BASE {
             bindings = <
-&kp ESCAPE      &kp Q    &kp W  &kp E        &kp R        &mt LG(T) T    &kp Y      &kp U      &kp I      &kp O        &kp P            &kp BACKSLASH
-&kp LCTRL       &lt 1 A  &kp S  &kp D        &kp F        &kp G          &kp H      &kp J      &kp K      &mt RG(L) L  &lt 3 SEMICOLON  &kp SINGLE_QUOTE
-&kp LEFT_SHIFT  &kp Z    &kp X  &mt RG(C) C  &mt RG(V) V  &kp B          &kp N      &kp M      &kp COMMA  &kp PERIOD   &kp SLASH        &mt RIGHT_GUI SLASH
-                                &lt 2 TAB    &kp SPACE    &td_bs         &kp ENTER  &kp ENTER
+&kp ESCAPE      &kp Q    &kp W  &kp E              &kp R              &cmd_plus LG(T) T    &kp Y      &kp U      &kp I      &kp O              &kp P            &kp BACKSLASH
+&kp LCTRL       &lt 1 A  &kp S  &kp D              &kp F              &kp G                &kp H      &kp J      &kp K      &cmd_plus RG(L) L  &lt 3 SEMICOLON  &kp SINGLE_QUOTE
+&kp LEFT_SHIFT  &kp Z    &kp X  &cmd_plus RG(C) C  &cmd_plus RG(V) V  &kp B                &kp N      &kp M      &kp COMMA  &kp PERIOD         &kp SLASH        &mt RIGHT_GUI SLASH
+                                &lt 2 TAB          &kp SPACE          &td_bs               &kp ENTER  &kp ENTER
             >;
         };
 
@@ -73,9 +95,9 @@
 
         vim_motions {
             bindings = <
-&trans  &trans            &trans            &trans            &trans            &trans              &trans          &trans    &trans        &trans     &trans  &trans
-&trans  &kp RG(NUMBER_1)  &kp RG(NUMBER_2)  &kp RG(NUMBER_3)  &kp RG(NUMBER_4)  &kp RG(NUMBER_5)    &kp LEFT_ARROW  &kp DOWN  &kp UP_ARROW  &kp RIGHT  &trans  &trans
-&trans  &trans            &trans            &trans            &trans            &trans              &trans          &trans    &trans        &trans     &trans  &trans
+&trans  &trans            &trans            &trans            &trans            &trans              &trans          &trans    &trans        &trans       &trans  &trans
+&trans  &kp RG(NUMBER_1)  &kp RG(NUMBER_2)  &kp RG(NUMBER_3)  &kp RG(NUMBER_4)  &kp RG(NUMBER_5)    &kp LEFT_ARROW  &kp DOWN  &kp UP_ARROW  &kp RIGHT    &trans  &trans
+&trans  &trans            &bootloader       &trans            &trans            &trans              &trans          &trans    &trans        &bootloader  &trans  &trans
                                             &trans            &trans            &trans              &trans          &trans
             >;
         };
