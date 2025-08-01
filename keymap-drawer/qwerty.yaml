@@ -6,7 +6,7 @@ layers:
   - W
   - E
   - R
-  - T
+  - {t: T, h: Gui+ T}
   - Y
   - U
   - I
@@ -22,14 +22,14 @@ layers:
   - H
   - J
   - K
-  - L
+  - {t: L, h: Gui+ L}
   - {t: ;, h: vim_motions}
   - ''''
   - LEFT SHIFT
   - Z
   - X
-  - C
-  - V
+  - {t: C, h: Gui+ C}
+  - {t: V, h: Gui+ V}
   - B
   - N
   - M
