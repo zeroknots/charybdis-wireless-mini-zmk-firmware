@@ -53,7 +53,7 @@
             >;
         };
 
-        NAV {
+        special_chars {
             bindings = <
 &trans  &trans  &trans  &kp LEFT_BRACE        &kp RIGHT_BRACE        &trans      &kp TILDE      &kp GRAVE       &kp ASTERISK   &trans            &trans     &trans
 &trans  &trans  &trans  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans      &trans         &trans          &kp PLUS       &kp MINUS         &kp PIPE   &trans
