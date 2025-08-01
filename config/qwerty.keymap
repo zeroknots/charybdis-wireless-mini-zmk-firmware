@@ -32,13 +32,12 @@
     // #define SLOW    6
     // #define SCROLL  7
 
-    behaviors {
-        td_mouse: td_mouse {
-            compatible = "zmk,behavior-tap-dance";
-            label = "TD_MOUSE";
-            #binding-cells = <0>;
-            tapping-term-ms = <200>;
+    combos {
+        compatible = "zmk,combos";
+
+        scroll {
             bindings = <&mkp MB3>;
+            key-positions = <13 38>;
         };
     };
 
