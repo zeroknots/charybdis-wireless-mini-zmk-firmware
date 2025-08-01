@@ -36,7 +36,7 @@ layers:
   - ','
   - .
   - /
-  - /
+  - {t: /, h: RIGHT GUI}
   - {t: TAB, h: numbers}
   - SPACE
   - BS NUM
@@ -140,11 +140,11 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - Gui+ 1
+  - Gui+ 2
+  - Gui+ 3
+  - Gui+ 4
+  - Gui+ 5
   - LEFT
   - DOWN
   - UP ARROW
