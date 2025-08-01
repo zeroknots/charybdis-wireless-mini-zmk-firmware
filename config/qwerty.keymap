@@ -51,6 +51,16 @@
             tapping-term-ms = <290>;
             flavor = "tap-preferred";
         };
+
+        mouse_scroll: mouse_scroll {
+            compatible = "zmk,behavior-hold-tap";
+            label = "MOUSE_SCROLL";
+            bindings = <&mkp>, <&mkp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <300>;
+            flavor = "tap-preferred";
+        };
     };
 
     keymap {
@@ -85,9 +95,9 @@
 
         vim_motions {
             bindings = <
-&trans  &trans            &trans            &trans            &trans            &trans              &trans          &trans    &trans        &trans     &trans  &trans
-&trans  &kp RG(NUMBER_1)  &kp RG(NUMBER_2)  &kp RG(NUMBER_3)  &kp RG(NUMBER_4)  &kp RG(NUMBER_5)    &kp LEFT_ARROW  &kp DOWN  &kp UP_ARROW  &kp RIGHT  &trans  &trans
-&trans  &trans            &trans            &trans            &trans            &trans              &trans          &trans    &trans        &trans     &trans  &trans
+&trans  &trans            &trans            &trans            &trans            &trans              &trans          &trans    &trans        &trans       &trans  &trans
+&trans  &kp RG(NUMBER_1)  &kp RG(NUMBER_2)  &kp RG(NUMBER_3)  &kp RG(NUMBER_4)  &kp RG(NUMBER_5)    &kp LEFT_ARROW  &kp DOWN  &kp UP_ARROW  &kp RIGHT    &trans  &trans
+&trans  &trans            &bootloader       &trans            &trans            &trans              &trans          &trans    &trans        &bootloader  &trans  &trans
                                             &trans            &trans            &trans              &trans          &trans
             >;
         };
