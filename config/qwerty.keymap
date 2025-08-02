@@ -56,6 +56,16 @@
             tapping-term-ms = <290>;
             flavor = "tap-preferred";
         };
+
+        scroll: scroll {
+            compatible = "zmk,behavior-hold-tap";
+            label = "SCROLL";
+            bindings = <&mkp>, <&mkp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "tap-preferred";
+        };
     };
 
     keymap {
@@ -72,10 +82,10 @@
 
         special_chars {
             bindings = <
-&trans  &trans  &trans  &kp LEFT_BRACE        &kp RIGHT_BRACE        &trans      &kp TILDE      &kp GRAVE       &kp ASTERISK   &trans            &trans     &trans
-&trans  &trans  &trans  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans      &trans         &trans          &kp PLUS       &kp MINUS         &kp PIPE   &trans
-&trans  &trans  &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &trans      &trans         &kp UNDERSCORE  &kp LESS_THAN  &kp GREATER_THAN  &kp EQUAL  &kp RGUI
-                        &mkp MB2              &mkp MB1               &mkp MB3    &kp BACKSPACE  &kp ENTER
+&trans  &trans  &trans  &kp LEFT_BRACE        &kp RIGHT_BRACE        &trans              &kp TILDE      &kp GRAVE       &kp ASTERISK   &trans            &trans     &trans
+&trans  &trans  &trans  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans              &trans         &trans          &kp PLUS       &kp MINUS         &kp PIPE   &trans
+&trans  &trans  &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &trans              &trans         &kp UNDERSCORE  &kp LESS_THAN  &kp GREATER_THAN  &kp EQUAL  &kp RGUI
+                        &mkp MB2              &mkp MB1               &scroll MB3 MCLK    &kp BACKSPACE  &kp ENTER
             >;
         };
 
