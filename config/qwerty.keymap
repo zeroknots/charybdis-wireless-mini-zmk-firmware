@@ -106,5 +106,14 @@
                                             &trans            &trans            &trans              &trans          &trans
             >;
         };
+
+        nvim {
+            bindings = <
+&trans  &trans     &trans  &trans  &trans      &trans    &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &kp CARET  &trans  &trans  &kp DOLLAR  &trans    &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans     &trans  &trans  &trans      &trans    &trans  &trans  &trans  &trans  &trans  &trans
+                           &trans  &trans      &trans    &trans  &trans
+            >;
+        };
     };
 };
