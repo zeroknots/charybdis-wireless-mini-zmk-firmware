@@ -82,10 +82,10 @@
 
         special_chars {
             bindings = <
-&trans  &trans  &trans  &kp LEFT_BRACE        &kp RIGHT_BRACE        &trans              &kp TILDE      &kp GRAVE       &kp ASTERISK   &trans            &trans     &trans
-&trans  &trans  &trans  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans              &trans         &trans          &kp PLUS       &kp MINUS         &kp PIPE   &trans
-&trans  &trans  &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &trans              &trans         &kp UNDERSCORE  &kp LESS_THAN  &kp GREATER_THAN  &kp EQUAL  &kp RGUI
-                        &mkp MB2              &mkp MB1               &scroll 7 MCLK      &kp BACKSPACE  &kp ENTER
+&trans  &trans  &trans  &kp LEFT_BRACE        &kp RIGHT_BRACE        &trans            &kp TILDE      &kp GRAVE       &kp ASTERISK   &trans            &trans     &trans
+&trans  &trans  &trans  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans            &trans         &trans          &kp PLUS       &kp MINUS         &kp PIPE   &trans
+&trans  &trans  &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &trans            &trans         &kp UNDERSCORE  &kp LESS_THAN  &kp GREATER_THAN  &kp EQUAL  &kp RGUI
+                        &mkp MB2              &mkp MB1               &scroll 7 MCLK    &kp BACKSPACE  &kp ENTER
             >;
         };
 
@@ -100,7 +100,7 @@
 
         vim_motions {
             bindings = <
-&trans  &trans            &trans            &trans            &trans            &bootloader         &bootloader     &trans    &trans        &trans     &trans  &trans
+&trans  &kp LC(NUMBER_1)  &kp LC(NUMBER_2)  &kp LC(NUMBER_3)  &kp LC(NUMBER_4)  &kp LC(N5)          &none           &trans    &trans        &trans     &trans  &bootloader
 &trans  &kp RG(NUMBER_1)  &kp RG(NUMBER_2)  &kp RG(NUMBER_3)  &kp RG(NUMBER_4)  &kp RG(NUMBER_5)    &kp LEFT_ARROW  &kp DOWN  &kp UP_ARROW  &kp RIGHT  &trans  &trans
 &trans  &trans            &none             &trans            &trans            &trans              &trans          &trans    &trans        &none      &trans  &trans
                                             &trans            &trans            &trans              &trans          &trans
