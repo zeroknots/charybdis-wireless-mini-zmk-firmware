@@ -20,7 +20,7 @@ layers:
   - F
   - G
   - H
-  - J
+  - {t: J, h: '&lt 4'}
   - K
   - {t: L, h: Gui+ L}
   - {t: ;, h: vim_motions}
@@ -81,7 +81,7 @@ layers:
   - RGUI
   - '&mkp MB2'
   - '&mkp MB1'
-  - {t: Mid CLK, h: '&mkp MB3'}
+  - {t: Mid CLK, h: special_chars}
   - BACK SPACE
   - ENTER
   numbers:
@@ -128,17 +128,17 @@ layers:
   - {t: ▽, type: trans}
   vim_motions:
   - {t: ▽, type: trans}
+  - Ctl+ 1
+  - Ctl+ 2
+  - Ctl+ 3
+  - Ctl+ 4
+  - Ctl+ 5
+  - ''
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - BOOT LDR
-  - BOOT LDR
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - Gui+ 1
   - Gui+ 2
@@ -161,6 +161,48 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - ''
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  nvim:
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - ^
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - $
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
