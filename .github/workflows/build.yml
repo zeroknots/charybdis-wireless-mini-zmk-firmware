@@ -105,7 +105,7 @@ jobs:
 
           # copy helper .dtsi files if they exist
           cp config/*.dtsi zmk/app/overlays/ 2>/dev/null || true
-          # .dtsi files are already copied from config/ in the line above
+          cp config/keymap/*.dtsi zmk/app/overlays/ 2>/dev/null || true
         fi
 
     # ───────── Inject custom shields & helper DTSI files ─────────
