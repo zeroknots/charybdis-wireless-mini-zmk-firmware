@@ -67,6 +67,12 @@
             flavor = "hold-preferred";
         };
 
+        scroll_motion: scroll_motion {
+            compatible = "zmk,behavior-sensor-rotate";
+            label = "ScrollMode";
+            bindings = <&msc VERT_SCROLL>; // or HORIZ_SCROLL
+        };
+
         homerow: homerow {
             compatible = "zmk,behavior-hold-tap";
             label = "HOMEROW";
