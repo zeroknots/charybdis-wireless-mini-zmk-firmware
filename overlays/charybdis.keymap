@@ -67,11 +67,11 @@
             flavor = "hold-preferred";
         };
 
-        scroll_motion: scroll_motion {
-            compatible = "zmk,behavior-sensor-rotate";
-            label = "ScrollMode";
-            bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
-        };
+        // scroll_motion: scroll_motion {
+        //     compatible = "zmk,behavior-sensor-rotate";
+        //     label = "ScrollMode";
+        //     bindings = <&msc MOVE_VERT(-15)>, <&msc MOVE_VERT(15)>;
+        // };
 
         homerow: homerow {
             compatible = "zmk,behavior-hold-tap";
