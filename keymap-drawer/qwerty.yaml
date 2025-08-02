@@ -40,7 +40,7 @@ layers:
   - {t: TAB, h: numbers}
   - SPACE
   - BS NUM
-  - ENTER
+  - BACK SPACE
   - ENTER
   special_chars:
   - {t: ▽, type: trans}
@@ -182,3 +182,5 @@ combos:
   k: R CLK
 - p: [13, 38]
   k: '&mkp MB3'
+- p: [37, 40]
+  k: Gui+ SPACE
