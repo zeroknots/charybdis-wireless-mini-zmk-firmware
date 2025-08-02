@@ -70,7 +70,7 @@
         scroll_motion: scroll_motion {
             compatible = "zmk,behavior-sensor-rotate";
             label = "ScrollMode";
-            bindings = <&msc VERT_SCROLL>; // or HORIZ_SCROLL
+            bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
         };
 
         homerow: homerow {
