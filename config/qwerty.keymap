@@ -101,7 +101,7 @@
 &trans  &trans  &trans  &kp LEFT_BRACE        &kp RIGHT_BRACE        &trans            &kp TILDE      &kp GRAVE       &kp ASTERISK   &trans            &trans     &trans
 &trans  &trans  &trans  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans            &trans         &trans          &kp PLUS       &kp MINUS         &kp PIPE   &trans
 &trans  &trans  &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &trans            &trans         &kp UNDERSCORE  &kp LESS_THAN  &kp GREATER_THAN  &kp EQUAL  &kp RGUI
-                        &mkp MB2              &mkp MB1               &scroll 1 MCLK    &kp BACKSPACE  &kp ENTER
+                        &mkp MB2              &mkp MB1               &lt 5 NUMBER_3    &kp BACKSPACE  &kp ENTER
             >;
         };
 
@@ -129,6 +129,15 @@
 &trans  &kp CARET  &trans  &trans  &kp DOLLAR  &trans    &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans     &trans  &trans  &trans      &trans    &trans  &trans  &trans  &trans  &trans  &trans
                            &trans  &trans      &trans    &trans  &trans
+            >;
+        };
+
+        scrolling {
+            bindings = <
+&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
+                        &trans  &trans  &trans    &trans  &trans
             >;
         };
     };
