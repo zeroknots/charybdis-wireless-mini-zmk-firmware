@@ -20,7 +20,7 @@ layers:
   - F
   - G
   - H
-  - {t: J, h: '&lt 4'}
+  - J
   - K
   - {t: L, h: Gui+ L}
   - {t: ;, h: vim_motions}
