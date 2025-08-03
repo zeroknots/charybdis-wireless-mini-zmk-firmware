@@ -3,7 +3,7 @@ layers:
   BASE:
   - ESCAPE
   - Q
-  - W
+  - {t: W, h: Gui+ W}
   - E
   - R
   - {t: T, h: Gui+ T}
