@@ -156,8 +156,8 @@ layers:
   - ''
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - BOOT LDR
+  - BOOT LDR
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - ''
