@@ -112,6 +112,16 @@
             tapping-term-ms = <300>;
             flavor = "tap-preferred";
         };
+
+        mouse_m3: mouse_m3 {
+            compatible = "zmk,behavior-hold-tap";
+            label = "MOUSE_M3";
+            bindings = <&mo>, <&mkp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <300>;
+            flavor = "balanced";
+        };
     };
 
     macros {
@@ -151,10 +161,10 @@
 
         special_chars {
             bindings = <
-&bootloader  &trans  &trans  &kp LEFT_BRACE        &kp RIGHT_BRACE        &none             &kp TILDE      &kp GRAVE       &kp ASTERISK   &trans            &trans     &trans
-&trans       &trans  &trans  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans            &trans         &trans          &kp PLUS       &kp MINUS         &kp PIPE   &trans
-&trans       &trans  &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &trans            &trans         &kp UNDERSCORE  &kp LESS_THAN  &kp GREATER_THAN  &kp EQUAL  &kp RGUI
-                             &mkp MB2              &mkp MB1               &lt 5 NUMBER_3    &kp BACKSPACE  &kp ENTER
+&bootloader  &trans  &trans  &kp LEFT_BRACE        &kp RIGHT_BRACE        &none              &kp TILDE      &kp GRAVE       &kp ASTERISK   &trans            &trans     &trans
+&trans       &trans  &trans  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans             &trans         &trans          &kp PLUS       &kp MINUS         &kp PIPE   &trans
+&trans       &trans  &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &trans             &trans         &kp UNDERSCORE  &kp LESS_THAN  &kp GREATER_THAN  &kp EQUAL  &kp RGUI
+                             &mkp MB2              &mkp MB1               &mouse_m3 5 MB3    &kp BACKSPACE  &kp ENTER
             >;
         };
 
