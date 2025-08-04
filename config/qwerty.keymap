@@ -84,6 +84,15 @@
         };
     };
 
+    macros {
+        vim_write: vim_write {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp COLON &kp W>;
+            label = "VIM_WRITE";
+        };
+    };
+
     keymap {
         compatible = "zmk,keymap";
 
