@@ -43,12 +43,12 @@ layers:
   - BACK SPACE
   - ENTER
   special_chars:
-  - {t: ▽, type: trans}
+  - BOOT LDR
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - '{'
   - '}'
-  - {t: ▽, type: trans}
+  - ''
   - '~'
   - '`'
   - '*'
@@ -156,8 +156,8 @@ layers:
   - ''
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - BOOT LDR
-  - BOOT LDR
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - ''
