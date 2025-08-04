@@ -134,8 +134,8 @@ layers:
   - Ctl+ 4
   - Ctl+ 5
   - ''
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - {t: U, h: '&vim_jump_back'}
+  - {t: I, h: '&vim_jump_fwd'}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - BOOT LDR
