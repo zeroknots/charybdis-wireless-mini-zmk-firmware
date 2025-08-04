@@ -81,7 +81,7 @@ layers:
   - RGUI
   - '&mkp MB2'
   - '&mkp MB1'
-  - {t: '3', h: scrolling}
+  - {t: '&mkp MB3', h: scrolling}
   - BACK SPACE
   - ENTER
   numbers:
