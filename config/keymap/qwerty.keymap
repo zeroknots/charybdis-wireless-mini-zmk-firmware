@@ -82,6 +82,59 @@
             tapping-term-ms = <300>;
             flavor = "tap-preferred";
         };
+
+        hold_vim_write: hold_vim_write {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HOLD_VIM_WRITE";
+            bindings = <&kp>, <&vim_write>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <300>;
+            flavor = "tap-preferred";
+        };
+
+        bh_vim_jump_back: bh_vim_jump_back {
+            compatible = "zmk,behavior-hold-tap";
+            label = "BH_VIM_JUMP_BACK";
+            bindings = <&vim_jump_back>, <&kp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <300>;
+            flavor = "tap-preferred";
+        };
+
+        bh_vim_jump_fws: bh_vim_jump_fws {
+            compatible = "zmk,behavior-hold-tap";
+            label = "BH_VIM_JUMP_FWS";
+            bindings = <&vim_jump_fwd>, <&kp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <300>;
+            flavor = "tap-preferred";
+        };
+    };
+
+    macros {
+        vim_write: vim_write {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp COLON &kp W>;
+            label = "VIM_WRITE";
+        };
+
+        vim_jump_back: vim_jump_back {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LBKT &kp J>;
+            label = "VIM_JUMP_BACK";
+        };
+
+        vim_jump_fwd: vim_jump_fwd {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp RBKT &kp J>;
+            label = "VIM_JUMP_FWD";
+        };
     };
 
     keymap {
@@ -89,19 +142,19 @@
 
         BASE {
             bindings = <
-&kp ESCAPE      &kp Q    &cmd_plus RG(W) W  &kp E              &kp R              &cmd_plus LG(T) T    &kp Y          &kp U      &kp I      &kp O              &kp P            &kp BACKSLASH
-&kp LCTRL       &lt 1 A  &kp S              &kp D              &kp F              &kp G                &kp H          &kp J      &kp K      &cmd_plus RG(L) L  &lt 3 SEMICOLON  &kp SINGLE_QUOTE
-&kp LEFT_SHIFT  &kp Z    &kp X              &cmd_plus RG(C) C  &cmd_plus RG(V) V  &kp B                &kp N          &kp M      &kp COMMA  &kp PERIOD         &kp SLASH        &mt RIGHT_GUI SLASH
-                                            &lt 2 TAB          &kp SPACE          &td_bs               &kp BACKSPACE  &kp ENTER
+&kp ESCAPE      &kp Q    &cmd_plus RG(W) W  &kp E              &kp R              &cmd_plus LG(T) T      &kp Y          &kp U      &kp I      &kp O              &kp P            &kp BACKSLASH
+&kp LCTRL       &lt 1 A  &kp S              &kp D              &kp F              &kp G                  &kp H          &kp J      &kp K      &cmd_plus RG(L) L  &lt 3 SEMICOLON  &kp SINGLE_QUOTE
+&kp LEFT_SHIFT  &kp Z    &kp X              &cmd_plus RG(C) C  &cmd_plus RG(V) V  &hold_vim_write B 0    &kp N          &kp M      &kp COMMA  &kp PERIOD         &kp SLASH        &mt RIGHT_GUI SLASH
+                                            &lt 2 TAB          &kp SPACE          &td_bs                 &kp BACKSPACE  &kp ENTER
             >;
         };
 
         special_chars {
             bindings = <
-&trans  &trans  &trans  &kp LEFT_BRACE        &kp RIGHT_BRACE        &trans            &kp TILDE      &kp GRAVE       &kp ASTERISK   &trans            &trans     &trans
-&trans  &trans  &trans  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans            &trans         &trans          &kp PLUS       &kp MINUS         &kp PIPE   &trans
-&trans  &trans  &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &trans            &trans         &kp UNDERSCORE  &kp LESS_THAN  &kp GREATER_THAN  &kp EQUAL  &kp RGUI
-                        &mkp MB2              &mkp MB1               &lt 5 NUMBER_3    &kp BACKSPACE  &kp ENTER
+&bootloader  &trans  &trans  &kp LEFT_BRACE        &kp RIGHT_BRACE        &none             &kp TILDE      &kp GRAVE       &kp ASTERISK   &trans            &trans     &trans
+&trans       &trans  &trans  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans            &trans         &trans          &kp PLUS       &kp MINUS         &kp PIPE   &trans
+&trans       &trans  &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &trans            &trans         &kp UNDERSCORE  &kp LESS_THAN  &kp GREATER_THAN  &kp EQUAL  &kp RGUI
+                             &mkp MB2              &mkp MB1               &lt 5 NUMBER_3    &kp BACKSPACE  &kp ENTER
             >;
         };
 
@@ -116,9 +169,9 @@
 
         vim_motions {
             bindings = <
-&trans  &kp LC(NUMBER_1)  &kp LC(NUMBER_2)  &kp LC(NUMBER_3)  &kp LC(NUMBER_4)  &kp LC(N5)          &none           &trans    &trans        &trans     &trans  &bootloader
-&trans  &kp RG(NUMBER_1)  &kp RG(NUMBER_2)  &kp RG(NUMBER_3)  &kp RG(NUMBER_4)  &kp RG(NUMBER_5)    &kp LEFT_ARROW  &kp DOWN  &kp UP_ARROW  &kp RIGHT  &trans  &trans
-&trans  &trans            &none             &trans            &trans            &bootloader         &bootloader     &trans    &trans        &none      &trans  &trans
+&trans  &kp LC(NUMBER_1)  &kp LC(NUMBER_2)  &kp LC(NUMBER_3)  &kp LC(NUMBER_4)  &kp LC(N5)          &none           &bh_vim_jump_back 0 U  &bh_vim_jump_fws 0 I  &trans     &trans  &bootloader
+&trans  &kp RG(NUMBER_1)  &kp RG(NUMBER_2)  &kp RG(NUMBER_3)  &kp RG(NUMBER_4)  &kp RG(NUMBER_5)    &kp LEFT_ARROW  &kp DOWN               &kp UP_ARROW          &kp RIGHT  &trans  &trans
+&trans  &trans            &none             &trans            &trans            &trans              &trans          &trans                 &trans                &none      &trans  &trans
                                             &trans            &trans            &trans              &trans          &trans
             >;
         };
