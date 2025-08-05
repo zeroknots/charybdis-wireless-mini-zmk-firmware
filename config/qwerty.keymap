@@ -161,10 +161,10 @@
 
         special_chars {
             bindings = <
-&bootloader  &trans  &trans  &kp LEFT_BRACE        &kp RIGHT_BRACE        &none              &kp TILDE      &kp GRAVE       &kp ASTERISK   &trans            &trans     &trans
-&trans       &trans  &trans  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans             &trans         &trans          &kp PLUS       &kp MINUS         &kp PIPE   &trans
-&trans       &trans  &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &trans             &trans         &kp UNDERSCORE  &kp LESS_THAN  &kp GREATER_THAN  &kp EQUAL  &kp RGUI
-                             &mkp MB2              &mkp MB1               &mouse_m3 5 MB3    &kp BACKSPACE  &kp ENTER
+&bootloader  &trans  &trans  &kp LEFT_BRACE        &kp RIGHT_BRACE        &none              &kp TILDE  &kp GRAVE       &kp ASTERISK   &trans            &trans     &trans
+&trans       &trans  &trans  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans             &trans     &trans          &kp PLUS       &kp MINUS         &kp PIPE   &trans
+&trans       &trans  &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &trans             &trans     &kp UNDERSCORE  &kp LESS_THAN  &kp GREATER_THAN  &kp EQUAL  &kp RGUI
+                             &mkp MB2              &mkp MB1               &mouse_m3 5 MB3    &trans     &trans
             >;
         };
 
