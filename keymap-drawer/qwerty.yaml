@@ -82,8 +82,8 @@ layers:
   - '&mkp MB2'
   - '&mkp MB1'
   - {t: '&mkp MB3', h: scrolling}
-  - BACK SPACE
-  - ENTER
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
   numbers:
   - '~'
   - '!'
