@@ -181,7 +181,7 @@
             bindings = <
 &trans  &kp LC(NUMBER_1)  &kp LC(NUMBER_2)  &kp LC(NUMBER_3)  &kp LC(NUMBER_4)  &kp LC(N5)          &none           &bh_vim_jump_back 0 U  &bh_vim_jump_fws 0 I  &trans     &trans  &bootloader
 &trans  &kp RG(NUMBER_1)  &kp RG(NUMBER_2)  &kp RG(NUMBER_3)  &kp RG(NUMBER_4)  &kp RG(NUMBER_5)    &kp LEFT_ARROW  &kp DOWN               &kp UP_ARROW          &kp RIGHT  &trans  &trans
-&trans  &trans            &none             &trans            &trans            &trans              &trans          &trans                 &trans                &none      &trans  &trans
+&trans  &trans            &none             &trans            &trans            &trans              &trans          &kp RIGHT_SHIFT        &trans                &none      &trans  &trans
                                             &trans            &trans            &trans              &trans          &trans
             >;
         };
