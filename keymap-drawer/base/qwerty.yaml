@@ -30,7 +30,7 @@ layers:
   - X
   - {t: C, h: Gui+ C}
   - {t: V, h: Gui+ V}
-  - {t: '&vim_write', h: B}
+  - B
   - N
   - M
   - ','
