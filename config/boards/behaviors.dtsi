@@ -132,7 +132,7 @@
             #binding-cells = <2>;
             flavor = "tap-preferred";
             tapping-term-ms = <300>;
-            bindings = <&vim_write>, <&kp>; // hold = :w, tap = param
+            bindings = <&vim_write>, <&kp>; // hold = :w, tap = kp B
         };
 
         mm_cm_sc: comma_semi_colon {
