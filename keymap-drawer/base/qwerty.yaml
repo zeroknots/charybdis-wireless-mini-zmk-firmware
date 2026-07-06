@@ -127,7 +127,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   vim_motions:
-  - {t: ▽, type: trans}
+  - BOOT LDR
   - Ctl+ 1
   - Ctl+ 2
   - Ctl+ 3
