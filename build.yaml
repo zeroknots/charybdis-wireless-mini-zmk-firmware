@@ -1,7 +1,7 @@
 # This file generates the GitHub Actions matrix.
 
 board:
-  - nice_nano/nrf52840
+  - nice_nano_v2
 
 shield:
   - charybdis_left
