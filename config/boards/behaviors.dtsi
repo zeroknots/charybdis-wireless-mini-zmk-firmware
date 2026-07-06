@@ -127,6 +127,14 @@
             mods          = <(MOD_LSFT | MOD_RSFT)>;
         };
 
+        ht_vim_write: ht_vim_write {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <300>;
+            bindings = <&vim_write>, <&kp>; // hold = :w, tap = param
+        };
+
         mm_cm_sc: comma_semi_colon {
             compatible    = "zmk,behavior-mod-morph";
             #binding-cells = <0>;
