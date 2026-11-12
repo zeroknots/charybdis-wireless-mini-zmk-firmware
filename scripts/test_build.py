@@ -133,7 +133,7 @@ class BuildTests(unittest.TestCase):
         self.assertTrue((first / "charybdis_left.uf2").exists())
         self.assertFalse((second / "charybdis_left.uf2").exists())
         self.assertFalse(any(args[:2] == ["west", "init"] for args in self.commands))
-        self.assertIn(["west", "update", "--narrow"], self.commands)
+        self.assertIn(["west", "update", "--narrow", "--fetch-opt=--depth=1"], self.commands)
 
     def test_invalid_jobs_or_source_tree_do_not_run_west(self):
         """Reject resource-limit bypasses and accidental use from another repository."""

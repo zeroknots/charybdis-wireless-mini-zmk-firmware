@@ -10,7 +10,20 @@ manifest:
     - name: zmk
       remote: zmkfirmware
       revision: edf5c0814fd3ea202e43aad2d68fd32e882a518c # v0.3.0, 2025-08-01
-      import: app/west.yml
+      clone-depth: 1
+      import:
+        file: app/west.yml
+        # The nRF52840 keyboard does not need other vendors' HALs or host tools.
+        name-allowlist:
+          - zephyr
+          - cmsis
+          - hal_nordic
+          - segger
+          # ZMK 0.3 references LVGL Kconfig symbols even with displays disabled.
+          - lvgl
+          - tinycrypt
+          - nanopb
+          - zmk-studio-messages
 
     - name: zmk-pmw3610-driver
       remote: 280Zo

@@ -95,7 +95,7 @@ def build(root, half, jobs, pristine):
         env = dict(os.environ, ZEPHYR_BASE=str(workspace / "zephyr"))
         if not (workspace / ".west").exists():
             command(["west", "init", "-l", config], workspace, env)
-        command(["west", "update", "--narrow"], workspace, env)
+        command(["west", "update", "--narrow", "--fetch-opt=--depth=1"], workspace, env)
         stage_shields(root, workspace)
         output_root = generated / "firmware"
         output_root.mkdir(exist_ok=True)

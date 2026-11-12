@@ -1,0 +1,4 @@
+name: charybdis-usb-flash
+build:
+  cmake: usb_flash
+  kconfig: usb_flash/Kconfig

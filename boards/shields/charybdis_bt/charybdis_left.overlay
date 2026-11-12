@@ -1,5 +1,17 @@
 #include "charybdis.dtsi"
 
+/ {
+    chosen {
+        charybdis,usb-flash-uart = &charybdis_flash_uart;
+    };
+};
+
+&zephyr_udc0 {
+    charybdis_flash_uart: charybdis_flash_uart {
+        compatible = "zephyr,cdc-acm-uart";
+    };
+};
+
 &kscan0 {
 	compatible = "zmk,kscan-gpio-matrix";
 	

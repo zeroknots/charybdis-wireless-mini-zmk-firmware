@@ -1,0 +1,9 @@
+config CHARYBDIS_USB_FLASH
+    bool "USB 1200-baud touch enters the nice!nano bootloader"
+    depends on USB_CDC_ACM && UART_LINE_CTRL
+    select CDC_ACM_DTE_RATE_CALLBACK_SUPPORT
+    help
+      A USB host can request UF2 bootloader mode by setting the Charybdis
+      CDC port to 1200 baud and closing it. Only USB has this capability.
+      Normal plugging, Studio traffic and Bluetooth do not request a reset.
+      This does not erase settings or change the bootloader itself.
