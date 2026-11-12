@@ -69,6 +69,15 @@ class KeymapTests(unittest.TestCase):
             with self.subTest(position=position):
                 self.assertEqual(base[position], f"&cmd_plus LC({letter}) {letter}")
 
+    def test_b_is_plain_b_not_the_old_save_macro(self):
+        """Protect quick taps and holds from the historical B-to-:w behavior."""
+        for keymap in ("qwerty.keymap", "qwerty-linux.keymap"):
+            with self.subTest(keymap=keymap):
+                source = preprocess(keymap)
+                self.assertEqual(layer_bindings(source, "BASE")[29], "&kp B")
+                for layer in ("special_chars", "numbers", "vim_motions", "nvim", "scrolling"):
+                    self.assertIn(layer_bindings(source, layer)[29], ("&trans", "&kp B"))
+
     def test_terminal_clipboard_is_explicit(self):
         """The semicolon-held layer has Ctrl+Shift+C/V, not shell Ctrl+C/V."""
         nav = layer_bindings(preprocess("qwerty-linux.keymap"), "vim_motions")
