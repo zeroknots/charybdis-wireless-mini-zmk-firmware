@@ -29,6 +29,8 @@ def preprocess(keymap):
             "dt-bindings/zmk/mouse.h",
             "dt-bindings/zmk/keys.h",
             "dt-bindings/zmk/pointing.h",
+            "dt-bindings/zmk/bt.h",
+            "dt-bindings/zmk/outputs.h",
             "behaviors/mouse_keys.dtsi",
             "behaviors.dtsi",
         ):
@@ -121,10 +123,32 @@ class KeymapTests(unittest.TestCase):
                 changed = {i for i, pair in enumerate(zip(before, after)) if pair[0] != pair[1]}
                 self.assertEqual(changed, expected_changes.get(layer, set()))
 
+    def test_connection_controls_exist_only_on_held_numbers_layer(self):
+        """Both OS maps must be able to clear a stale bond from the keyboard.
+
+        Without &bt bindings a host-side unpair leaves the keyboard holding an
+        unusable bond with no on-device recovery. BT_CLR must never be on a
+        layer reachable without holding Tab, so it cannot be hit while typing.
+        """
+        expected = ["&bt BT_SEL 0", "&bt BT_SEL 1", "&bt BT_SEL 2", "&out OUT_TOG", "&bt BT_CLR"]
+        for keymap in ("qwerty.keymap", "qwerty-linux.keymap"):
+            source = preprocess(keymap)
+            with self.subTest(keymap=keymap):
+                numbers = layer_bindings(source, "numbers")
+                self.assertEqual(numbers[30:35], expected)
+                self.assertEqual(numbers[35], "&trans")
+                for layer in ("BASE", "special_chars", "vim_motions", "nvim", "scrolling"):
+                    joined = " ".join(layer_bindings(source, layer))
+                    self.assertNotIn("&bt", joined, layer)
+                    self.assertNotIn("&out", joined, layer)
+
     def test_macos_output_is_unchanged(self):
-        """Compare all preprocessed source tokens with the pre-port legacy map."""
+        """Compare all preprocessed source tokens with the pinned macOS map.
+
+        Updated deliberately when Tab-layer BT/output controls were added.
+        """
         normalized = "".join(preprocess("qwerty.keymap").split())
-        self.assertEqual(hashlib.sha256(normalized.encode()).hexdigest(), "358f9c34f7558168747ab17cbd11f9ac0694e5b7925478c69acd17cef36aee0f")
+        self.assertEqual(hashlib.sha256(normalized.encode()).hexdigest(), "948c1f7f895593b778dc843748b5331b539fa467ee7eb22e5c14317e1d18a224")
 
     def test_build_matrix_discovers_linux_bluetooth_and_preserves_macos(self):
         """Existing CI must discover both OS variants without treating DTSI as a map."""
