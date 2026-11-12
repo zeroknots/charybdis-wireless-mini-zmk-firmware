@@ -2,6 +2,9 @@
 zmk/
 zephyr/
 !zephyr/module.yml
+# This is local firmware source, not the downloaded Zephyr checkout.
+!config/zephyr/
+!config/zephyr/module.yml
 modules/
 zmk-pmw3610-driver/
 local-build/logs.txt

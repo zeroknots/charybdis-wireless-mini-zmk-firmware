@@ -39,8 +39,18 @@
       build = pkgs.writeShellScriptBin "zmk-build" ''
         exec ${python}/bin/python3 -I ${./scripts/build.py} --repo "$PWD" "$@"
       '';
-      flash = pkgs.writeShellScriptBin "zmk-flash" ''
-        exec ${python}/bin/python3 -I ${./scripts/flash.py} "$@"
+      flash = pkgs.writeShellApplication {
+        name = "zmk-flash";
+        runtimeInputs = [
+          pkgs.udisks
+          pkgs.util-linux
+        ];
+        text = ''
+          exec ${pkgs.python3}/bin/python3 -I ${./scripts/flash.py} "$@"
+        '';
+      };
+      clean = pkgs.writeShellScriptBin "zmk-clean" ''
+        exec ${python}/bin/python3 -I ${./scripts/clean.py} --repo "$PWD" "$@"
       '';
     in
     {
@@ -59,8 +69,18 @@
             python3 -I "$src/scripts/test_keymaps.py"
             python3 -I "$src/scripts/test_build.py"
             python3 -I "$src/scripts/test_flash.py"
+            python3 -I "$src/scripts/test_clean.py"
+            python3 -I "$src/scripts/test_manifest.py"
+            python3 -I "$src/scripts/test_usb_host.py"
+            python3 -I "$src/scripts/test_usb_firmware.py"
             touch "$out"
           '';
+
+      # A desktop user can run only the flasher without loading the compiler SDK.
+      apps.${system}.flash = {
+        type = "app";
+        program = "${flash}/bin/zmk-flash";
+      };
 
       devShells.${system}.default = pkgs.mkShell {
         packages = [
@@ -75,6 +95,7 @@
           pkgs.nixfmt
           build
           flash
+          clean
         ];
         ZEPHYR_TOOLCHAIN_VARIANT = "zephyr";
       };

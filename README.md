@@ -105,87 +105,165 @@ The current macOS and Linux sources bind B to plain `&kp B`. Use a current build
 not that old release, to get the fix. A keymap-only update normally needs the right
 half only. No settings reset is required.
 
+### Keep downloads small and clean old workspaces
+
+The manifest imports only the Nordic keyboard dependencies. New fetches use shallow
+history. LVGL remains a source dependency because pinned ZMK 0.3 references its
+Kconfig symbols even with displays disabled. Other vendors' HALs are not needed.
+
+To preview downloads that can be removed from an older workspace:
+
+```sh
+zmk-clean
+```
+
+To apply that preview when no build is running:
+
+```sh
+zmk-clean --apply
+```
+
+Cleanup removes only unused downloaded clones under `.build/workspace/modules`.
+It refuses symlinks, path escapes, dirty clones, additional Git refs, stashes,
+linked worktrees, changed revisions, recoverable detached user commits and an
+active build lock. It preserves firmware bundles, compiler caches, source files
+and the shared Nix store. It does not cancel or relocate a build.
+
 ### Verify the firmware
 
-1. Run `python3 -I scripts/test_keymaps.py` with Python 3 and `cpp` available.
-   The tests check staged includes, shortcut positions, legacy compatibility and matrix discovery.
-   They stub upstream headers and do not replace a firmware build.
-2. Run `python3 -I scripts/test_flash.py` to test the helper on temporary files, without a keyboard.
-3. Open this repository's [Actions page](https://github.com/zeroknots/charybdis-wireless-mini-zmk-firmware/actions/workflows/build.yml).
-4. Select a successful run for the exact commit you intend to flash.
-5. Download its `charybdis-qwerty-linux-bt` artifact.
-6. Extract the artifact into a new directory.
+1. Run `nix build .#checks.x86_64-linux.keyboard --no-link` from the repository root.
+   This checks keymaps, build orchestration, cleanup, UF2 validation, USB discovery,
+   reset consent, mounting and the firmware callback's failure conditions.
+   The tests use temporary files and simulated devices. They do not replace an
+   ARM firmware build or physical USB testing.
+2. Run `zmk-build --half both` in the Nix shell to compile both halves locally.
+
+Alternatively, download CI-built firmware:
+
+1. Open this repository's [Actions page](https://github.com/zeroknots/charybdis-wireless-mini-zmk-firmware/actions/workflows/build.yml).
+2. Select a successful run for the exact commit you intend to flash.
+3. Download its `charybdis-qwerty-linux-bt` artifact.
+4. Extract the artifact into a new directory.
 
 ### Flash with the terminal helper
 
 Keep another keyboard available. Flashing disconnects the selected half temporarily
-and replaces its firmware. Save a known-good `qwerty-bt` bundle for rollback.
-Do not flash `settings_reset` or clear Bluetooth profiles for a keymap-only update.
+and replaces its firmware. Save a known-good Bluetooth/USB bundle for rollback.
+Do not flash `settings_reset` or clear Bluetooth profiles for this upgrade.
 A settings reset erases stored settings and can require pairing again.
 
 The [right half is the central](boards/shields/charybdis_bt/charybdis_right.conf).
-For keymap-only changes, ZMK normally requires flashing **right only**.
-For changes that apply to both halves or ZMK split-protocol updates, flash both.
-The helper's full-update sequence is left then right, not a mandated flashing order.
+Ordinary keymap-only updates normally need **right only**, which is the default.
+Installing USB-triggered bootloader support requires updating **both halves once**.
+The left-then-right sequence is a convenient guide, not a mandated flashing order.
 
-From the keyboard repository, show the ASCII key diagram and bootloader chords:
+#### First installation: one manual bootloader entry per half
+
+1. Enter the project's shell with `nix develop`.
+2. Run `zmk-build --half both`.
+3. Save the printed artifact directory.
+4. Run `zmk-flash /printed/artifact/directory --half both --dry-run`.
+5. Run `zmk-flash /printed/artifact/directory --half both --manual`.
+
+The wizard first asks you to connect the left half by USB. Use its manual shortcut,
+then press Enter in the wizard. The tool mounts `NICENANO` through UDisks, asks you
+to type `left`, copies the matching file and waits for the bootloader to unmount.
+It then guides you through the same steps for the right half. Do not use an old
+bundle for this step, because it does not contain the USB-trigger feature.
+
+Show the full ASCII guide at any time:
 
 ```sh
-python3 -I scripts/flash.py --guide
+zmk-flash --guide
 ```
 
-The running keymap must match this repository for these chords to work:
+Manual bootloader shortcuts in the current macOS/Linux keymaps:
 
 - **Left:** hold A, then press Esc at the top left.
 - **Right:** hold semicolon, then press backslash at the top right.
 
 Keep both halves powered and connected to each other while using a chord.
-The reset binding acts on the half where its key is pressed, not always the central.
-If the chord does not work, connect the intended half by USB and double-tap its
-physical reset button. This enters bootloader mode. It does not clear settings.
+If the running keymap differs or the chord fails, double-tap that half's physical
+reset button with its USB cable connected. This enters bootloader mode without
+clearing settings. Keep these manual methods available for recovery.
 
-Validate the files and display the guide without writing anything:
+#### Subsequent updates: USB-triggered bootloader entry
 
-```sh
-python3 -I scripts/flash.py /path/to/extracted-bt-bundle --dry-run
-```
-
-Start a keymap-only update of the right half:
+For the normal right-half update:
 
 ```sh
-python3 -I scripts/flash.py /path/to/extracted-bt-bundle
+zmk-flash /printed/artifact/directory
 ```
 
-If a full update is needed, select both halves:
+For both halves:
 
 ```sh
-python3 -I scripts/flash.py /path/to/extracted-bt-bundle --half both
+zmk-flash /printed/artifact/directory --half both
 ```
 
-The [helper](scripts/flash.py) checks each selected UF2 before the first write.
-It rejects another MCU family, malformed blocks and writes outside the pinned
-board's application partition. It never resets settings or mounts disks.
+For each half, the wizard asks you to connect USB and type the half's name before
+requesting a reboot or copying firmware. It finds the matching Charybdis CDC port,
+sends a 1200-baud touch, waits for the bootloader on that physical USB port, mounts
+`NICENANO` if needed and copies the validated UF2. No key press is needed after the
+initial installation. Close ZMK Studio and other serial clients before starting.
 
-For each half, the helper asks you to connect USB and enter bootloader mode.
-Mount the `NICENANO` volume in your file manager if the desktop does not do so.
-The helper requires exactly one UF2 volume and a recognized nice!nano Board-ID.
-If discovery is ambiguous, rerun with `--mount /run/media/YOUR_USER/NICENANO`.
-It never requests root access or changes device permissions.
+The [firmware module](config/usb_flash/usb_flash.c) uses Zephyr's native CDC callback.
+It does not poll in the background or replace Studio's receive callback. The reboot
+requires an explicit baud-rate change to 1200, closed DTR and a configured USB link.
+Normal USB connection, other baud rates and Bluetooth traffic do not trigger it.
+Any process with access to the USB serial port can make this request. Do not open
+the port at 1200 baud for unrelated serial work.
 
-Before copying, type the physical half's name at the confirmation prompt.
-The Board-ID identifies a compatible bootloader, **not a unique keyboard or half**.
-UF2 validation cannot authenticate the source or detect a renamed wrong-half,
-dongle, or settings-reset image. Use only trusted, matching Bluetooth/USB images.
+The left half gains a control-only CDC interface named `Charybdis Left`. It remains
+the peripheral, not a second host-facing keyboard. The right half keeps the existing
+`Charybdis` product name and Studio interface, preserving its pointer names.
 
-The helper refuses existing destination files and symlinks. A mount change,
-write failure or restart timeout stops further writes. If a copy started, a failure
-can leave the result unverified. Bootloader unmount is not proof of working firmware.
+If the old firmware has no control port, the wizard displays the manual fallback.
+If a reset request produces no matching bootloader, it stops without copying.
+Use `--manual` for the initial installation or recovery. `--port /dev/ttyACM0` can
+select one validated runtime port when several are connected. It cannot be mixed
+with `--manual` or `--mount`.
 
-After flashing, verify typing, GUI shortcuts, Foot clipboard shortcuts, Super+Space
-and trackball behavior over USB. Disconnect USB and repeat over Bluetooth.
-If a half does not restart or reconnect, stop before clearing settings.
-To roll back, rerun the helper with the corresponding known-good `qwerty-bt` bundle.
-If ZMK Studio overrides are present, inspect them before considering a settings reset.
+#### Accounts, mounting and safety
+
+Automatic mounting uses the host's existing UDisks service and authorization policy.
+Run the flasher as an account that can access both the UF2 files and the USB serial
+port. A logged-in desktop account normally has the relevant mount authorization.
+Building as `neo` does not grant that isolated account desktop USB or mount access.
+The tool stops on denied access. It never invokes sudo, changes ownership or grants
+permissions to bypass isolation.
+
+A desktop account can load only the flasher, without the compiler SDK or a local
+Git ownership exception, using the published flake app after this change is merged:
+
+```sh
+nix run github:zeroknots/charybdis-wireless-mini-zmk-firmware#flash -- /accessible/firmware/directory
+```
+
+The caller must already have access to the selected images. Do not weaken account
+boundaries to obtain access. The normal UDisks authorization may show a desktop
+approval prompt. If the desktop already mounted the exact device, the tool reuses
+that mount instead of mounting it again.
+
+The [helper](scripts/flash.py) validates all selected UF2 files before requesting a
+reset or write. It rejects another MCU family, malformed blocks and writes outside
+the pinned application partition. USB automatic mode tracks the selected physical
+port through re-enumeration, so another keyboard's bootloader is not a substitute.
+Manual mode requires one unambiguous NICENANO volume or an explicit existing
+`--mount` path, followed by validation of the nice!nano Board-ID.
+
+The Board-ID alone cannot identify a unique keyboard or half. UF2 validation cannot
+authenticate the source or detect a renamed wrong-half, dongle or settings-reset
+image. Use trusted matching Bluetooth/USB images and verify the connected half.
+
+Existing destination files, symlinks, mount changes, failed copies and restart
+timeouts stop further writes. If a copy started, its result can remain unverified.
+Bootloader unmount is not proof of healthy firmware. After flashing, verify typing,
+B, held T, clipboard shortcuts and the trackball over USB, then over Bluetooth.
+
+To roll back, run the helper with the corresponding known-good bundle. An older
+image can remove USB-trigger support, so manual bootloader entry remains necessary
+for recovery. Inspect any ZMK Studio overrides before considering a settings reset.
 
 References:
 
