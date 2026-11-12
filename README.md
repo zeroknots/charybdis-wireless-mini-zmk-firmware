@@ -8,6 +8,140 @@ If you want to customize things the repo is set up to build through GitHub Actio
 containerized build script that will build all firmwares locally with a single command.
 
 
+## Linux and NixOS
+
+Use **`charybdis-qwerty-linux-bt`** for direct Bluetooth or a USB cable to one half.
+The `bt` bundle contains `charybdis_left.uf2` and `charybdis_right.uf2`. It is not
+limited to wireless use. Do not select the `dongle` bundle for this setup.
+
+The active sources are in [config/keymap](config/keymap):
+
+- [qwerty-linux.keymap](config/keymap/qwerty-linux.keymap) selects Linux shortcuts.
+- [qwerty.keymap](config/keymap/qwerty.keymap) preserves the macOS shortcuts.
+- [qwerty.dtsi](config/keymap/qwerty.dtsi) shares the physical layout, layers and timing.
+- `qwerty-link.keymap` is an older independent variant. Do not edit it for this port.
+
+The older copies in `config/` and `config/boards/`, and the upstream layer overview
+below, do not describe the active Linux keymap.
+
+### Linux shortcuts
+
+| Action | Gesture | Output |
+| --- | --- | --- |
+| Copy / paste in GUI apps | Hold C / V | Ctrl+C / Ctrl+V |
+| Close / open a browser tab | Hold W / T | Ctrl+W / Ctrl+T |
+| Focus the browser address bar | Hold L | Ctrl+L |
+| Copy / paste in Foot | Hold semicolon, then tap C / V | Ctrl+Shift+C / Ctrl+Shift+V |
+| Open the desktop launcher | Press thumb keys 37 and 40 together | Super+Space |
+| Select workspace 1–5 | Hold semicolon, then press A/S/D/F/G | Super+1–5 |
+| Hold Super | Hold the far-right slash key | Right Super |
+
+Tapping C, V, W, T and L still types the letter. Shortcut holds retain the existing
+290 ms, tap-preferred behavior. The firmware cannot detect the focused application.
+In a terminal, Ctrl+C can interrupt a command. Use the explicit terminal clipboard
+shortcuts instead. Trackball settings and the other key positions are unchanged.
+
+### Nix integration
+
+[zeroknots/nix](https://github.com/zeroknots/nix) declares this repository in its
+personal repository list. After the Nix change is merged and each host is activated,
+the existing repository service clones missing checkouts into
+`/repos/private/charybdis-wireless-mini-zmk-firmware` and registers the personal T3
+project. It does not pull existing checkouts, build firmware, or flash devices.
+NixOS activation does not modify keyboard pairings or firmware.
+
+Keep desktop and terminal bindings in the Nix repository. Keep firmware in this
+repository. Both macOS and Linux variants remain available through the existing CI.
+
+### Verify the firmware
+
+1. Run `python3 -I scripts/test_keymaps.py` with Python 3 and `cpp` available.
+   The tests check staged includes, shortcut positions, legacy compatibility and matrix discovery.
+   They stub upstream headers and do not replace a firmware build.
+2. Run `python3 -I scripts/test_flash.py` to test the helper on temporary files, without a keyboard.
+3. Open this repository's [Actions page](https://github.com/zeroknots/charybdis-wireless-mini-zmk-firmware/actions/workflows/build.yml).
+4. Select a successful run for the exact commit you intend to flash.
+5. Download its `charybdis-qwerty-linux-bt` artifact.
+6. Extract the artifact into a new directory.
+
+### Flash with the terminal helper
+
+Keep another keyboard available. Flashing disconnects the selected half temporarily
+and replaces its firmware. Save a known-good `qwerty-bt` bundle for rollback.
+Do not flash `settings_reset` or clear Bluetooth profiles for a keymap-only update.
+A settings reset erases stored settings and can require pairing again.
+
+The [right half is the central](boards/shields/charybdis_bt/charybdis_right.conf).
+For keymap-only changes, ZMK normally requires flashing **right only**.
+For changes that apply to both halves or ZMK split-protocol updates, flash both.
+The helper's full-update sequence is left then right, not a mandated flashing order.
+
+From the keyboard repository, show the ASCII key diagram and bootloader chords:
+
+```sh
+python3 -I scripts/flash.py --guide
+```
+
+The running keymap must match this repository for these chords to work:
+
+- **Left:** hold A, then press Esc at the top left.
+- **Right:** hold semicolon, then press backslash at the top right.
+
+Keep both halves powered and connected to each other while using a chord.
+The reset binding acts on the half where its key is pressed, not always the central.
+If the chord does not work, connect the intended half by USB and double-tap its
+physical reset button. This enters bootloader mode. It does not clear settings.
+
+Validate the files and display the guide without writing anything:
+
+```sh
+python3 -I scripts/flash.py /path/to/extracted-bt-bundle --dry-run
+```
+
+Start a keymap-only update of the right half:
+
+```sh
+python3 -I scripts/flash.py /path/to/extracted-bt-bundle
+```
+
+If a full update is needed, select both halves:
+
+```sh
+python3 -I scripts/flash.py /path/to/extracted-bt-bundle --half both
+```
+
+The [helper](scripts/flash.py) checks each selected UF2 before the first write.
+It rejects another MCU family, malformed blocks and writes outside the pinned
+board's application partition. It never resets settings or mounts disks.
+
+For each half, the helper asks you to connect USB and enter bootloader mode.
+Mount the `NICENANO` volume in your file manager if the desktop does not do so.
+The helper requires exactly one UF2 volume and a recognized nice!nano Board-ID.
+If discovery is ambiguous, rerun with `--mount /run/media/YOUR_USER/NICENANO`.
+It never requests root access or changes device permissions.
+
+Before copying, type the physical half's name at the confirmation prompt.
+The Board-ID identifies a compatible bootloader, **not a unique keyboard or half**.
+UF2 validation cannot authenticate the source or detect a renamed wrong-half,
+dongle, or settings-reset image. Use only trusted, matching Bluetooth/USB images.
+
+The helper refuses existing destination files and symlinks. A mount change,
+write failure or restart timeout stops further writes. If a copy started, a failure
+can leave the result unverified. Bootloader unmount is not proof of working firmware.
+
+After flashing, verify typing, GUI shortcuts, Foot clipboard shortcuts, Super+Space
+and trackball behavior over USB. Disconnect USB and repeat over Bluetooth.
+If a half does not restart or reconnect, stop before clearing settings.
+To roll back, rerun the helper with the corresponding known-good `qwerty-bt` bundle.
+If ZMK Studio overrides are present, inspect them before considering a settings reset.
+
+References:
+
+- [ZMK split keyboards](https://zmk.dev/docs/features/split-keyboards): central-only keymap updates and when to flash all parts.
+- [ZMK reset behaviors](https://zmk.dev/docs/keymaps/behaviors/reset): bootloader versus restart and source-specific reset behavior.
+- [nice!nano getting started](https://nicekeyboards.com/docs/nice-nano/getting-started): double-tap reset and the `NICENANO` volume.
+- [ZMK connection troubleshooting](https://zmk.dev/docs/troubleshooting/connection-issues): settings-reset consequences and pairing recovery.
+
 ## Quick Start
 
 ### Flashing the Firmware
@@ -90,14 +224,14 @@ This section will help you personalize your firmware. Everything—from keys and
 
 ### Building Only Specific Keymaps or Shields
 
-By default both Bluetooth and Dongle formats will build firmware pairs for the QWERTY, Coleman DH, and Graphite keymaps. To save time and streamline your builds, you can build just a single keymap or shield that you're interested in:
+[scripts/generate_matrix.py](scripts/generate_matrix.py) discovers `.keymap` files
+in `config/keymap/`. CI builds Bluetooth/USB and dongle bundles for each entrypoint,
+plus one settings-reset bundle. Shared `.dtsi` files are not separate build targets.
+The current workflow does not use `build.yaml` to select its matrix.
 
-**Single keymap:**
-Any `.keymap` files in the `config/` directory will be automatically built. By default QWERTY and Colemak DH are included, but you can add or remove as many as you'd like as long as there is at least one .keymap file to process.
-Some additional keymaps are available in the extra-keymaps directory.
-
-**Single shield format (Dongle or Bluetooth):**
-Delete the shield directory (charybdis_dongle or charybdis_bt) from the config/boards/shields/ folder to build only the format you need.
+To add another layout, add its entrypoint to `config/keymap/`. Changing the formats
+requires updating the matrix generator and workflow together. Do not delete shield
+directories to select a build.
 
 
 ### Modify Key Mappings
@@ -129,7 +263,10 @@ Using a GUI to generate the keymap file before building the firmware is another 
 
 To change a key layout choose a behavior you'd like to assign to a key, then choose a parameter code. This process is more clearly outlined on ZMK's [Keymaps & Behaviors](https://zmk.dev/docs/features/keymaps) page. All keycodes are documented [here](https://zmk.dev/docs/codes) page
 
-Open the config/<keymap_name>.keymap file (e.g., config/qwerty.keymap) and change keys, or add/remove layers, then merge the changes and re-flash the keyboard with the updated firmware.
+Edit the entrypoint and helpers under [config/keymap](config/keymap). For the
+macOS/Linux pair, edit [qwerty.dtsi](config/keymap/qwerty.dtsi). Change an OS-specific
+shortcut inside its conditional block, or change shared bindings below that block.
+Run the keymap tests and firmware build before flashing.
 
 
 ### Modifying Trackball Behavior
