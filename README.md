@@ -53,6 +53,58 @@ NixOS activation does not modify keyboard pairings or firmware.
 Keep desktop and terminal bindings in the Nix repository. Keep firmware in this
 repository. Both macOS and Linux variants remain available through the existing CI.
 
+### Build locally with Nix
+
+The keyboard repository has its own pinned [Nix shell](flake.nix) and
+[lockfile](flake.lock) for `x86_64-linux`. It does not require a NixOS rebuild,
+the `devenv` CLI, Docker, root access or a persistent tool installation.
+The shell provides Zephyr SDK 0.16.9 with only the ARM toolchain and the base
+Python dependencies needed by the existing ZMK 0.3 / Zephyr 3.5 build.
+
+From this repository's root:
+
+```sh
+nix develop
+zmk-build                  # right/central only, normally enough for a keymap change
+zmk-build --half both      # left then right, for a full update
+```
+
+Entering the shell does not build or flash anything. The first build downloads
+the SDK and West sources. Later builds reuse `.build/workspace` and incremental
+compilation directories. The default is two jobs. `--jobs` accepts 1 through 4.
+`--pristine` asks West to rebuild the selected compilation directories.
+A second command refuses to modify a workspace while a local build holds its lock.
+
+The [builder](scripts/build.py) stages the Bluetooth/USB shields, Linux keymap and
+helpers as CI does. It enables ZMK Studio only on the right/central half.
+It does not run `west zephyr-export`, export CMake packages or install tools into
+your home, reset settings, or flash hardware. Zephyr's compiler-probe cache stays
+under `.build/cache`. Build failures stop the remaining steps.
+
+Each successful invocation prints a new artifact directory under `.build/firmware/`.
+The directory contains the selected `charybdis_left.uf2` and/or
+`charybdis_right.uf2`, plus `west-manifest.yml` with the resolved source revisions.
+A new directory prevents an old left image from being mixed silently with a new
+right-only build. Existing artifact directories are retained.
+
+Validate a printed directory before flashing it:
+
+```sh
+zmk-flash /path/printed/by/zmk-build --dry-run
+# If you built both and intend to update both:
+zmk-flash /path/printed/by/zmk-build --half both --dry-run
+```
+
+The toolchain is locked by Nix. West still follows [config/west.yml](config/west.yml),
+including transitive references, as CI does. This is an incremental development
+build, not a hermetic Nix firmware derivation. The saved frozen manifest records
+what West resolved. Neither command updates `flake.lock` or the source manifest.
+
+**B-key warning:** the old `v1.0.0` release predates the fix for B typing `:w`.
+The current macOS and Linux sources bind B to plain `&kp B`. Use a current build,
+not that old release, to get the fix. A keymap-only update normally needs the right
+half only. No settings reset is required.
+
 ### Verify the firmware
 
 1. Run `python3 -I scripts/test_keymaps.py` with Python 3 and `cpp` available.
