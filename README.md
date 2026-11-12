@@ -53,33 +53,94 @@ NixOS activation does not modify keyboard pairings or firmware.
 Keep desktop and terminal bindings in the Nix repository. Keep firmware in this
 repository. Both macOS and Linux variants remain available through the existing CI.
 
-### Verify and flash the Linux variant
+### Verify the firmware
 
-Keep another keyboard available. Flashing temporarily disconnects the keyboard and
-replaces its firmware. Save a known-good `qwerty-bt` bundle before proceeding.
-Do not flash `settings_reset` or clear Bluetooth profiles for this keymap-only change.
-Those operations can erase settings and require pairing again.
-
-1. Run `python3 -I scripts/test_keymaps.py` from this repository with Python 3 and `cpp` available.
+1. Run `python3 -I scripts/test_keymaps.py` with Python 3 and `cpp` available.
    The tests check staged includes, shortcut positions, legacy compatibility and matrix discovery.
    They stub upstream headers and do not replace a firmware build.
-2. Open this repository's [Actions page](https://github.com/zeroknots/charybdis-wireless-mini-zmk-firmware/actions/workflows/build.yml).
-3. Select a successful run for the exact commit you intend to flash.
-4. Download the `charybdis-qwerty-linux-bt` artifact from that run.
-5. Extract the artifact into a new directory.
-6. Connect the left half by USB.
-7. Double-press its reset button to mount the bootloader volume.
-8. Copy `charybdis_left.uf2` to that volume. The device should restart and unmount.
-9. Connect the right half by USB.
-10. Double-press its reset button to mount the bootloader volume.
-11. Copy `charybdis_right.uf2` to that volume. The device should restart and unmount.
-12. Verify typing, GUI shortcuts, Foot clipboard shortcuts, Super+Space and trackball behavior over USB.
-13. Verify the same behavior over the existing Bluetooth connection with the USB cable disconnected.
+2. Run `python3 -I scripts/test_flash.py` to test the helper on temporary files, without a keyboard.
+3. Open this repository's [Actions page](https://github.com/zeroknots/charybdis-wireless-mini-zmk-firmware/actions/workflows/build.yml).
+4. Select a successful run for the exact commit you intend to flash.
+5. Download its `charybdis-qwerty-linux-bt` artifact.
+6. Extract the artifact into a new directory.
 
-If a device does not restart or the halves do not reconnect, stop before clearing
-settings. To roll back, flash the corresponding left and right files from the
-saved `qwerty-bt` bundle. If ZMK Studio overrides are present, they can take priority
-over compiled defaults. Inspect them before considering a settings reset.
+### Flash with the terminal helper
+
+Keep another keyboard available. Flashing disconnects the selected half temporarily
+and replaces its firmware. Save a known-good `qwerty-bt` bundle for rollback.
+Do not flash `settings_reset` or clear Bluetooth profiles for a keymap-only update.
+A settings reset erases stored settings and can require pairing again.
+
+The [right half is the central](boards/shields/charybdis_bt/charybdis_right.conf).
+For keymap-only changes, ZMK normally requires flashing **right only**.
+For changes that apply to both halves or ZMK split-protocol updates, flash both.
+The helper's full-update sequence is left then right, not a mandated flashing order.
+
+From the keyboard repository, show the ASCII key diagram and bootloader chords:
+
+```sh
+python3 -I scripts/flash.py --guide
+```
+
+The running keymap must match this repository for these chords to work:
+
+- **Left:** hold A, then press Esc at the top left.
+- **Right:** hold semicolon, then press backslash at the top right.
+
+Keep both halves powered and connected to each other while using a chord.
+The reset binding acts on the half where its key is pressed, not always the central.
+If the chord does not work, connect the intended half by USB and double-tap its
+physical reset button. This enters bootloader mode. It does not clear settings.
+
+Validate the files and display the guide without writing anything:
+
+```sh
+python3 -I scripts/flash.py /path/to/extracted-bt-bundle --dry-run
+```
+
+Start a keymap-only update of the right half:
+
+```sh
+python3 -I scripts/flash.py /path/to/extracted-bt-bundle
+```
+
+If a full update is needed, select both halves:
+
+```sh
+python3 -I scripts/flash.py /path/to/extracted-bt-bundle --half both
+```
+
+The [helper](scripts/flash.py) checks each selected UF2 before the first write.
+It rejects another MCU family, malformed blocks and writes outside the pinned
+board's application partition. It never resets settings or mounts disks.
+
+For each half, the helper asks you to connect USB and enter bootloader mode.
+Mount the `NICENANO` volume in your file manager if the desktop does not do so.
+The helper requires exactly one UF2 volume and a recognized nice!nano Board-ID.
+If discovery is ambiguous, rerun with `--mount /run/media/YOUR_USER/NICENANO`.
+It never requests root access or changes device permissions.
+
+Before copying, type the physical half's name at the confirmation prompt.
+The Board-ID identifies a compatible bootloader, **not a unique keyboard or half**.
+UF2 validation cannot authenticate the source or detect a renamed wrong-half,
+dongle, or settings-reset image. Use only trusted, matching Bluetooth/USB images.
+
+The helper refuses existing destination files and symlinks. A mount change,
+write failure or restart timeout stops further writes. If a copy started, a failure
+can leave the result unverified. Bootloader unmount is not proof of working firmware.
+
+After flashing, verify typing, GUI shortcuts, Foot clipboard shortcuts, Super+Space
+and trackball behavior over USB. Disconnect USB and repeat over Bluetooth.
+If a half does not restart or reconnect, stop before clearing settings.
+To roll back, rerun the helper with the corresponding known-good `qwerty-bt` bundle.
+If ZMK Studio overrides are present, inspect them before considering a settings reset.
+
+References:
+
+- [ZMK split keyboards](https://zmk.dev/docs/features/split-keyboards): central-only keymap updates and when to flash all parts.
+- [ZMK reset behaviors](https://zmk.dev/docs/keymaps/behaviors/reset): bootloader versus restart and source-specific reset behavior.
+- [nice!nano getting started](https://nicekeyboards.com/docs/nice-nano/getting-started): double-tap reset and the `NICENANO` volume.
+- [ZMK connection troubleshooting](https://zmk.dev/docs/troubleshooting/connection-issues): settings-reset consequences and pairing recovery.
 
 ## Quick Start
 

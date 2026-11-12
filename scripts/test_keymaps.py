@@ -87,6 +87,17 @@ class KeymapTests(unittest.TestCase):
             "NUMBER_1", "NUMBER_2", "NUMBER_3", "NUMBER_4", "NUMBER_5",
         )])
 
+    def test_documented_bootloader_chords_match_both_keymaps(self):
+        """The helper's A+Esc and semicolon+backslash guide must match real layers."""
+        for keymap in ("qwerty.keymap", "qwerty-linux.keymap"):
+            with self.subTest(keymap=keymap):
+                source = preprocess(keymap)
+                base = layer_bindings(source, "BASE")
+                self.assertEqual(base[13], "&lt 1 A")
+                self.assertEqual(base[22], "&lt 3 SEMICOLON")
+                self.assertEqual(layer_bindings(source, "special_chars")[0], "&bootloader")
+                self.assertEqual(layer_bindings(source, "vim_motions")[11], "&bootloader")
+
     def test_only_intended_linux_bindings_differ(self):
         """Require all six layers to retain their 41-key matrix and other bindings."""
         mac = preprocess("qwerty.keymap")
