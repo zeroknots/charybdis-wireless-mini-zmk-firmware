@@ -1,4 +1,4 @@
-/* Linux GUI shortcuts with separate terminal clipboard actions.
+/* Linux GUI shortcuts with terminal paste on held V and layer clipboard actions.
  * Shared DTSI helpers are staged by the existing Bluetooth/USB build workflow.
  */
 #define CHARYBDIS_LINUX
