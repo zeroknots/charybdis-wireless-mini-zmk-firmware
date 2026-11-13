@@ -67,9 +67,25 @@ class KeymapTests(unittest.TestCase):
     def test_linux_gui_shortcuts_preserve_letter_taps(self):
         """Hold shortcuts use Control, but ordinary typing remains unchanged."""
         base = layer_bindings(preprocess("qwerty-linux.keymap"), "BASE")
-        for position, letter in ((2, "W"), (5, "T"), (21, "L"), (27, "C"), (28, "V")):
+        for position, letter in ((2, "W"), (5, "T"), (21, "L"), (27, "C")):
             with self.subTest(position=position):
                 self.assertEqual(base[position], f"&cmd_plus LC({letter}) {letter}")
+
+    def test_held_v_pastes_without_changing_tap_or_timing(self):
+        """Linux holds must paste in terminals, never send shell Ctrl+V or shift taps."""
+        for keymap, shortcut in (
+            ("qwerty-linux.keymap", "LC(LS(V))"),
+            ("qwerty.keymap", "RG(V)"),
+        ):
+            with self.subTest(keymap=keymap):
+                source = preprocess(keymap)
+                self.assertEqual(layer_bindings(source, "BASE")[28], f"&cmd_plus {shortcut} V")
+                behavior = re.search(r"cmd_plus:\s*cmd_plus\s*\{([^}]+)\}", source)
+                self.assertIsNotNone(behavior, "Missing cmd_plus hold-tap behavior")
+                self.assertRegex(behavior[1], r'compatible\s*=\s*"zmk,behavior-hold-tap";')
+                self.assertRegex(behavior[1], r"bindings\s*=\s*<&kp>,\s*<&kp>;")
+                self.assertRegex(behavior[1], r"tapping-term-ms\s*=\s*<290>;")
+                self.assertRegex(behavior[1], r'flavor\s*=\s*"tap-preferred";')
 
     def test_b_is_plain_b_not_the_old_save_macro(self):
         """Protect quick taps and holds from the historical B-to-:w behavior."""

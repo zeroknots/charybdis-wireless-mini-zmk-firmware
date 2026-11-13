@@ -1,14 +1,15 @@
 /* Shared physical layout. Only the Linux entrypoint selects Control shortcuts.
  * Keep GUI/Super bindings for the launcher, workspaces and held modifier intact.
- * Terminal clipboard actions live on the semicolon-held navigation layer so
- * ordinary Control+C can still interrupt a command.
+ * Linux held V pastes in terminals. The semicolon-held navigation layer also
+ * provides terminal copy/paste, keeping ordinary Control+C for interrupts.
  */
 #ifdef CHARYBDIS_LINUX
 #define APP_CLOSE LC(W)
 #define APP_NEW_TAB LC(T)
 #define APP_LOCATION LC(L)
 #define APP_COPY LC(C)
-#define APP_PASTE LC(V)
+/* Ctrl+V reaches the shell as quoted-insert (^V), not terminal paste. */
+#define APP_PASTE LC(LS(V))
 #define TERMINAL_COPY &kp LC(LS(C))
 #define TERMINAL_PASTE &kp LC(LS(V))
 #else

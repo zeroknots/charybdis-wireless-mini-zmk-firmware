@@ -28,7 +28,9 @@ below, do not describe the active Linux keymap.
 
 | Action | Gesture | Output |
 | --- | --- | --- |
-| Copy / paste in GUI apps | Hold C / V | Ctrl+C / Ctrl+V |
+| Copy in GUI apps | Hold C | Ctrl+C |
+| Paste in Foot | Hold V | Ctrl+Shift+V |
+| Paste in GUI apps | Hold the left Ctrl key, then tap V | Ctrl+V |
 | Close / open a browser tab | Hold W / T | Ctrl+W / Ctrl+T |
 | Focus the browser address bar | Hold L | Ctrl+L |
 | Copy / paste in Foot | Hold semicolon, then tap C / V | Ctrl+Shift+C / Ctrl+Shift+V |
@@ -38,8 +40,10 @@ below, do not describe the active Linux keymap.
 
 Tapping C, V, W, T and L still types the letter. Shortcut holds retain the existing
 290 ms, tap-preferred behavior. The firmware cannot detect the focused application.
-In a terminal, Ctrl+C can interrupt a command. Use the explicit terminal clipboard
-shortcuts instead. Trackball settings and the other key positions are unchanged.
+Held V always sends Ctrl+Shift+V, including in GUI apps, which may assign it another
+paste action. For ordinary GUI paste, hold the left Ctrl key and tap V instead.
+In a terminal, Ctrl+C can interrupt a command. To copy in Foot, hold semicolon and
+then tap C. Trackball settings and the other key positions are unchanged.
 
 ### Nix integration
 
